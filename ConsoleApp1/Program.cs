@@ -36,7 +36,7 @@ namespace ConsoleApp1
 
         public Good(string name)
         {
-            if (name == "" || name == null)
+            if (string.IsNullOrEmpty(name))
                 throw new NullReferenceException();
 
             Name = name;
@@ -56,7 +56,7 @@ namespace ConsoleApp1
 
         public void Delive(Good good, int amount)
         {
-            if(good  == null || amount <= 0) 
+            if (good == null || amount <= 0)
                 throw new NullReferenceException();
 
             if (_goods.ContainsKey(good))
@@ -67,7 +67,7 @@ namespace ConsoleApp1
 
         public void Show()
         {
-            foreach(var good in _goods)
+            foreach (var good in _goods)
             {
                 Console.WriteLine($"Название: {good.Key}, количество: {good.Value}");
             }
@@ -77,10 +77,16 @@ namespace ConsoleApp1
         {
             if (_goods.ContainsKey(good))
             {
-                if (_goods[good] - amount == 0)
-                    _goods.Remove(good);
-                else
+                if (_goods[good] >= amount)
+                {
                     _goods[good] -= amount;
+
+                    if (_goods[good] == 0)
+                        _goods.Remove(good);
+                }
+
+                else
+                    throw new ArgumentOutOfRangeException();
             }
             else
                 throw new Exception();
